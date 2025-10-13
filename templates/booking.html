@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <title>Horizon Travels - Book Now</title>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>Horizon Travels</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          <li><a href="{{ url_for('destinations') }}">Destinations</a></li>
+          <li><a href="{{ url_for('booking') }}" class="active">Book Now</a></li>
+          <li><a href="{{ url_for('login') }}">Login</a></li>
+          <li><a href="{{ url_for('register') }}">Register</a></li>
+        </ul>
+      </nav>
+      <div class="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <h2>Book Your Journey</h2>
+      <p>Choose your travel mode, destinations, and dates</p>
+    </div>
+  </section>
+
+  <section class="booking-section">
+    <div class="container">
+      <div class="booking-container">
+        <div class="booking-form">
+          <h3>Journey Details</h3>
+          <form id="bookingForm">
+            <div class="form-group">
+              <label for="travel-mode">Travel Mode</label>
+              <select id="travel-mode" class="form-control" required>
+                <option value="">Select Travel Mode</option>
+                <option value="air">Air Travel</option>
+                <option value="coach">Coach Travel</option>
+                <option value="train">Train Travel</option>
+              </select>
+            </div>
+
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label for="from">From</label>
+                  <select id="from" class="form-control" required>
+                    <option value="">Select Origin</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label for="to">To</label>
+                  <select id="to" class="form-control" required>
+                    <option value="">Select Destination</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label for="departure-date">Departure Date</label>
+                  <input type="date" id="departure-date" class="form-control" required>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label for="seat-class">Seat Class</label>
+                  <select id="seat-class" class="form-control" required>
+                    <option value="">Select Class</option>
+                    <option value="standard">Standard</option>
+                    <option value="business">Business</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="passengers">Number of Passengers</label>
+              <input type="number" id="passengers" class="form-control" min="1" max="10" value="1" required>
+            </div>
+
+            <h3>Passenger Details</h3>
+
+            <div class="form-group">
+              <label for="full-name">Full Name</label>
+              <input type="text" id="full-name" class="form-control" placeholder="Enter full name" required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-col">
+                <div class="form-group">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" class="form-control" placeholder="Enter email" required>
+                </div>
+              </div>
+              <div class="form-col">
+                <div class="form-group">
+                  <label for="phone">Phone</label>
+                  <input type="tel" id="phone" class="form-control" placeholder="Enter phone number" required>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary" style="width: 100%;">Continue to Payment</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="booking-summary">
+          <h3>Booking Summary</h3>
+          <div class="summary-content">
+            <div class="summary-item">
+              <span>Origin:</span>
+              <span id="summary-origin">-</span>
+            </div>
+            <div class="summary-item">
+              <span>Destination:</span>
+              <span id="summary-destination">-</span>
+            </div>
+            <div class="summary-item">
+              <span>Date:</span>
+              <span id="summary-date">-</span>
+            </div>
+            <div class="summary-item">
+              <span>Travel Mode:</span>
+              <span id="summary-mode">-</span>
+            </div>
+            <div class="summary-item">
+              <span>Seat Class:</span>
+              <span id="summary-class">-</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Passengers:</span>
+              <span id="summary-passengers" class="summary-value">-</span>
+            </div>
+          </div>
+          <div class="summary-section">
+            <h3>Price Details</h3>
+            <div class="summary-item">
+              <span class="summary-label">Base Price:</span>
+              <span id="summary-base-price" class="summary-value">£0.00</span>
+            </div>
+            <div class="summary-item">
+              <span class="summary-label">Discount:</span>
+              <span id="summary-discount" class="summary-value">£0.00</span>
+            </div>
+            <div class="summary-item total">
+              <span class="summary-label">Total:</span>
+              <span id="summary-total" class="summary-value">£0.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Horizon Travels</h3>
+          <p>Making UK travel easy and comfortable since 2023.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('destinations') }}">Destinations</a></li>
+            <li><a href="{{ url_for('booking') }}">Book Now</a></li>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p>Email: info@horizontravels.com</p>
+          <p>Phone: +44 123 456 7890</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Horizon Travels. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Get cities and routes from the template
+    const citiesData = JSON.parse('{{ cities|tojson|safe }}');
+    const routesData = JSON.parse('{{ routes|tojson|safe }}');
+    
+    console.log('Cities data:', citiesData);
+    console.log('Routes data:', routesData);
+    
+    // Initialize form elements
+    const form = document.getElementById('bookingForm');
+    const travelModeSelect = document.getElementById('travel-mode');
+    const fromSelect = document.getElementById('from');
+    const toSelect = document.getElementById('to');
+    const dateInput = document.getElementById('departure-date');
+    const passengersInput = document.getElementById('passengers');
+    const classSelect = document.getElementById('seat-class');
+
+    // Initialize form when page loads
+    function initializeForm() {
+      // Set minimum date to today
+      const today = new Date().toISOString().split('T')[0];
+      dateInput.min = today;
+      dateInput.value = today;  // Set default value to today
+
+      // Populate travel mode first
+      travelModeSelect.innerHTML = '<option value="">Select Travel Mode</option>';
+      if (routesData && Object.keys(routesData).length > 0) {
+        Object.keys(routesData).forEach(mode => {
+          const option = document.createElement('option');
+          option.value = mode;
+          option.textContent = mode.charAt(0).toUpperCase() + mode.slice(1) + ' Travel';
+          travelModeSelect.appendChild(option);
+        });
+
+        // Get unique origin cities from routes
+        const originCities = new Set();
+        Object.values(routesData).forEach(modeRoutes => {
+          Object.keys(modeRoutes).forEach(routeKey => {
+            const [from, to] = routeKey.split('-');
+            originCities.add(from);
+          });
+        });
+
+        // Populate origin dropdown
+        fromSelect.innerHTML = '<option value="">Select Origin</option>';
+        Array.from(originCities).sort().forEach(city => {
+          const option = document.createElement('option');
+          option.value = city;
+          option.textContent = city;
+          fromSelect.appendChild(option);
+        });
+
+        // Initially disable destination dropdown
+        toSelect.disabled = true;
+        updateSummary();
+      } else {
+        console.error('No routes data available');
+      }
+    }
+
+    // Update destinations based on selected origin and travel mode
+    function updateDestinations() {
+      const travelMode = travelModeSelect.value;
+      const fromCity = fromSelect.value;
+      console.log('Updating destinations for:', travelMode, fromCity);
+
+      // Reset and disable destination dropdown
+      toSelect.innerHTML = '<option value="">Select Destination</option>';
+      toSelect.disabled = true;
+
+      if (travelMode && fromCity && routesData[travelMode]) {
+        const destinations = new Set();
+        Object.keys(routesData[travelMode]).forEach(routeKey => {
+          const [from, to] = routeKey.split('-');
+          if (from === fromCity) {
+            destinations.add(to);
+          }
+        });
+
+        if (destinations.size > 0) {
+          Array.from(destinations).sort().forEach(city => {
+            const option = document.createElement('option');
+            option.value = city;
+            option.textContent = city;
+            toSelect.appendChild(option);
+          });
+          toSelect.disabled = false;
+        }
+        console.log('Available destinations:', Array.from(destinations));
+      }
+      updateSummary();
+    }
+
+    // Update booking summary with selected options
+    function updateSummary() {
+      const travelMode = travelModeSelect.value;
+      const from = fromSelect.value;
+      const to = toSelect.value;
+      const date = dateInput.value;
+      const passengers = parseInt(passengersInput.value) || 1;
+      const classType = classSelect.value;
+
+      console.log('Updating summary:', {
+        travelMode, from, to, date, passengers, classType
+      });
+
+      // Update summary display
+      document.getElementById('summary-origin').textContent = from || '-';
+      document.getElementById('summary-destination').textContent = to || '-';
+      document.getElementById('summary-date').textContent = date || '-';
+      document.getElementById('summary-mode').textContent = travelMode ? travelMode.charAt(0).toUpperCase() + travelMode.slice(1) + ' Travel' : '-';
+      document.getElementById('summary-class').textContent = classType ? classType.charAt(0).toUpperCase() + classType.slice(1) : '-';
+      document.getElementById('summary-passengers').textContent = passengers || '-';
+
+      // Calculate prices
+      let basePrice = 0;
+      let discount = 0;
+
+      if (travelMode && from && to) {
+        const routeKey = `${from}-${to}`;
+        const fareTable = routesData[travelMode];
+        console.log('Checking route:', routeKey, 'in', travelMode);
+        
+        if (fareTable && fareTable[routeKey]) {
+          basePrice = classType === 'business' ? fareTable[routeKey].business_fare : fareTable[routeKey].fare;
+          
+          if (date) {
+            const journeyDate = new Date(date);
+            const today = new Date();
+            const daysInAdvance = Math.floor((journeyDate - today) / (1000 * 60 * 60 * 24));
+            
+            if (daysInAdvance >= 80) {
+              discount = basePrice * passengers * 0.25;
+            } else if (daysInAdvance >= 60) {
+              discount = basePrice * passengers * 0.15;
+            } else if (daysInAdvance >= 45) {
+              discount = basePrice * passengers * 0.10;
+            }
+          }
+        }
+      }
+
+      const totalPrice = (basePrice * passengers) - discount;
+      console.log('Price calculation:', { basePrice, discount, totalPrice });
+
+      // Update price displays
+      document.getElementById('summary-base-price').textContent = `£${basePrice.toFixed(2)}`;
+      document.getElementById('summary-discount').textContent = `£${discount.toFixed(2)}`;
+      document.getElementById('summary-total').textContent = `£${totalPrice.toFixed(2)}`;
+    }
+
+    // Add event listeners
+    travelModeSelect.addEventListener('change', updateDestinations);
+    fromSelect.addEventListener('change', updateDestinations);
+    toSelect.addEventListener('change', updateSummary);
+    dateInput.addEventListener('change', updateSummary);
+    passengersInput.addEventListener('change', updateSummary);
+    classSelect.addEventListener('change', updateSummary);
+
+    // Form submission handler
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = {
+        travel_mode: travelModeSelect.value,
+        from: fromSelect.value,
+        to: toSelect.value,
+        departure_date: dateInput.value,
+        passengers: passengersInput.value,
+        seat_class: classSelect.value,
+        full_name: document.getElementById('full-name').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+      };
+
+      // Validate form data
+      for (const [key, value] of Object.entries(formData)) {
+        if (!value) {
+          alert(`Please fill in the ${key.replace('_', ' ')} field.`);
+          return;
+        }
+      }
+
+      // Submit booking
+      fetch('/api/booking', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          window.location.href = data.redirect;
+        } else {
+          alert(data.error || 'An error occurred while processing your booking.');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An unexpected error occurred. Please try again later.');
+      });
+    });
+
+    // Initialize form on page load
+    document.addEventListener('DOMContentLoaded', initializeForm);
+  </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <title>Horizon Travels - Home</title>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>Horizon Travels</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="{{ url_for('index') }}" class="active">Home</a></li>
+          <li><a href="{{ url_for('destinations') }}">Destinations</a></li>
+          <li><a href="{{ url_for('booking') }}">Book Now</a></li>
+          <li><a href="{{ url_for('login') }}">Login</a></li>
+          <li><a href="{{ url_for('register') }}">Register</a></li>
+        </ul>
+      </nav>
+      <div class="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h2>Travel Across the UK with Ease</h2>
+      <p>Book your journey today and experience the best in travel comfort</p>
+      <a href="{{ url_for('booking') }}" class="btn btn-primary">Book Now</a>
+    </div>
+  </section>
+
+  <section class="journey-options">
+    <div class="container">
+      <h2>Choose Your Journey Option</h2>
+      <div class="options-container">
+        <div class="option-card">
+          <div class="card-image air"></div>
+          <h3>Air Travel</h3>
+          <p>All destinations. Available Monday to Friday.</p>
+          <div class="features">
+            <div class="feature-item">130 available seats</div>
+            <div class="feature-item">Business & Economy class</div>
+            <div class="feature-item">All UK destinations</div>
+          </div>
+          <a href="booking.html?mode=air" class="btn btn-secondary">Select Air Travel</a>
+        </div>
+
+        <div class="option-card">
+          <div class="card-image coach"></div>
+          <h3>Coach Travel</h3>
+          <p>An affordable and fun travel option. Available Saturday to Thursday.</p>
+          <div class="features">
+            <div class="feature-item">45 available seats</div>
+            <div class="feature-item">Business & Economy class</div>
+            <div class="feature-item">Most UK destinations</div>
+          </div>
+          <a href="booking.html?mode=coach" class="btn btn-secondary">Select Coach Travel</a>
+        </div>
+
+        <div class="option-card">
+          <div class="card-image train"></div>
+          <h3>Train Travel</h3>
+          <p>Comfortable travel with scenic views. Available all week.</p>
+          <div class="features">
+            <div class="feature-item">250 available seats</div>
+            <div class="feature-item">Business & Economy class</div>
+            <div class="feature-item">Most UK destinations</div>
+          </div>
+          <a href="booking.html?mode=train" class="btn btn-secondary">Select Train Travel</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Horizon Travels</h3>
+          <p>Making UK travel easy and comfortable since 2023.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('destinations') }}">Destinations</a></li>
+            <li><a href="{{ url_for('booking') }}">Book Now</a></li>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p>Email: info@horizontravels.com</p>
+          <p>Phone: +44 123 456 7890</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Horizon Travels. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('nav');
+    
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      nav.classList.toggle('active');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,473 @@
+<!-- user-dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <title>Horizon Travels - My Account</title>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>Horizon Travels</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          <li><a href="{{ url_for('destinations') }}">Destinations</a></li>
+          <li><a href="{{ url_for('booking') }}">Book Now</a></li>
+          <li><a href="{{ url_for('user_dashboard') }}" class="active">My Account</a></li>
+          <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+      </nav>
+      <div class="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <h2>Welcome, {{ user.first_name }}!</h2>
+      <p>View and manage your bookings and profile</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-messages">
+            {% for category, message in messages %}
+              <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </section>
+
+  <section class="user-dashboard-section">
+    <div class="container">
+      <div class="user-dashboard">
+        <div class="dashboard-sidebar">
+          <div class="user-profile-summary">
+            <h4>{{ user.first_name }} {{ user.last_name }}</h4>
+            <p>{{ user.email }}</p>
+            <p>{{ user.phone }}</p>
+          </div>
+          <ul>
+            <li class="active"><a href="#bookings">My Bookings</a></li>
+            <li><a href="#upcoming">Upcoming Trips</a></li>
+            <li><a href="#past">Past Trips</a></li>
+            <li><a href="#profile">Profile Settings</a></li>
+            <li><a href="#password">Change Password</a></li>
+          </ul>
+          <div class="dashboard-actions">
+            <a href="{{ url_for('booking') }}" class="btn btn-primary">Book New Trip</a>
+          </div>
+        </div>
+
+        <div class="dashboard-content">
+          <div id="bookings">
+            <div class="dashboard-header">
+              <h3>My Bookings</h3>
+              <p>View and manage your travel bookings</p>
+            </div>
+
+            {% if bookings %}
+              {% for booking in bookings %}
+              <div class="booking-card">
+                <div class="booking-header">
+                  <div>
+                    <h4>{{ booking.route.from_city.name }} to {{ booking.route.to_city.name }}</h4>
+                    <p>Booking ID: {{ booking.reference }}</p>
+                  </div>
+                  <div class="booking-status {{ booking.status }}">
+                    {{ booking.status|capitalize }}
+                  </div>
+                </div>
+                <div class="booking-details">
+                  <div class="booking-info">
+                    <p><strong>Date:</strong> {{ booking.journey_date.strftime('%d %B %Y') }}</p>
+                    <p><strong>Travel Mode:</strong> {{ booking.route.mode|capitalize }}</p>
+                    <p><strong>Departure:</strong> {{ booking.route.departure_time.strftime('%H:%M') }}</p>
+                    <p><strong>Arrival:</strong> {{ booking.route.arrival_time.strftime('%H:%M') }}</p>
+                    <p><strong>Class:</strong> {{ booking.class_type|capitalize }}</p>
+                    <p><strong>Passengers:</strong> {{ booking.passengers }}</p>
+                  </div>
+                  <div class="booking-price">
+                    <p><strong>Total:</strong> £{{ "%.2f"|format(booking.total_price) }}</p>
+                    <div class="booking-actions">
+                      <a href="{{ url_for('booking_confirmation', booking_id=booking.id) }}" class="btn-small">View Details</a>
+                      {% if booking.status == 'confirmed' %}
+                      <button class="btn-small btn-outline cancel-booking-btn" data-booking-id="{{ booking.id }}">Cancel</button>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            {% else %}
+              <div class="no-bookings">
+                <p>You don't have any bookings yet.</p>
+                <a href="{{ url_for('booking') }}" class="btn btn-primary">Book a Journey</a>
+              </div>
+            {% endif %}
+          </div>
+
+          <div id="upcoming" style="display: none;">
+            <div class="dashboard-header">
+              <h3>Upcoming Trips</h3>
+              <p>Your future travel plans</p>
+            </div>
+
+            {% if upcoming_bookings %}
+              {% for booking in upcoming_bookings %}
+              <div class="booking-card">
+                <div class="booking-header">
+                  <div>
+                    <h4>{{ booking.route.from_city.name }} to {{ booking.route.to_city.name }}</h4>
+                    <p>Booking ID: {{ booking.reference }}</p>
+                  </div>
+                  <div class="booking-status {{ booking.status }}">
+                    {{ booking.status|capitalize }}
+                  </div>
+                </div>
+                <div class="booking-details">
+                  <div class="booking-info">
+                    <p><strong>Date:</strong> {{ booking.journey_date.strftime('%d %B %Y') }}</p>
+                    <p><strong>Travel Mode:</strong> {{ booking.route.mode|capitalize }}</p>
+                    <p><strong>Departure:</strong> {{ booking.route.departure_time.strftime('%H:%M') }}</p>
+                    <p><strong>Arrival:</strong> {{ booking.route.arrival_time.strftime('%H:%M') }}</p>
+                    <p><strong>Class:</strong> {{ booking.class_type|capitalize }}</p>
+                    <p><strong>Passengers:</strong> {{ booking.passengers }}</p>
+                  </div>
+                  <div class="booking-price">
+                    <p><strong>Total:</strong> £{{ "%.2f"|format(booking.total_price) }}</p>
+                    <div class="booking-actions">
+                      <a href="{{ url_for('booking_confirmation', booking_id=booking.id) }}" class="btn-small">View Details</a>
+                      <button class="btn-small btn-outline cancel-booking-btn" data-booking-id="{{ booking.id }}">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            {% else %}
+              <div class="no-bookings">
+                <p>You don't have any upcoming trips.</p>
+                <a href="{{ url_for('booking') }}" class="btn btn-primary">Book a Journey</a>
+              </div>
+            {% endif %}
+          </div>
+
+          <div id="past" style="display: none;">
+            <div class="dashboard-header">
+              <h3>Past Trips</h3>
+              <p>Your travel history</p>
+            </div>
+
+            {% if past_bookings %}
+              {% for booking in past_bookings %}
+              <div class="booking-card">
+                <div class="booking-header">
+                  <div>
+                    <h4>{{ booking.route.from_city.name }} to {{ booking.route.to_city.name }}</h4>
+                    <p>Booking ID: {{ booking.reference }}</p>
+                  </div>
+                  <div class="booking-status {{ booking.status }}">
+                    {{ booking.status|capitalize }}
+                  </div>
+                </div>
+                <div class="booking-details">
+                  <div class="booking-info">
+                    <p><strong>Date:</strong> {{ booking.journey_date.strftime('%d %B %Y') }}</p>
+                    <p><strong>Travel Mode:</strong> {{ booking.route.mode|capitalize }}</p>
+                    <p><strong>Departure:</strong> {{ booking.route.departure_time.strftime('%H:%M') }}</p>
+                    <p><strong>Arrival:</strong> {{ booking.route.arrival_time.strftime('%H:%M') }}</p>
+                    <p><strong>Class:</strong> {{ booking.class_type|capitalize }}</p>
+                    <p><strong>Passengers:</strong> {{ booking.passengers }}</p>
+                  </div>
+                  <div class="booking-price">
+                    <p><strong>Total:</strong> £{{ "%.2f"|format(booking.total_price) }}</p>
+                    <div class="booking-actions">
+                      <a href="{{ url_for('booking_confirmation', booking_id=booking.id) }}" class="btn-small">View Details</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            {% else %}
+              <div class="no-bookings">
+                <p>You don't have any past trips.</p>
+              </div>
+            {% endif %}
+          </div>
+
+          <div id="profile" class="profile-section" style="display: none;">
+            <h3>Profile Settings</h3>
+            <form id="profileForm" action="{{ url_for('update_profile') }}" method="POST">
+              <div class="form-row">
+                <div class="form-col">
+                  <div class="form-group">
+                    <label for="first_name">First Name</label>
+                    <input type="text" id="first_name" name="first_name" class="form-control" value="{{ user.first_name }}" required>
+                  </div>
+                </div>
+                <div class="form-col">
+                  <div class="form-group">
+                    <label for="last_name">Last Name</label>
+                    <input type="text" id="last_name" name="last_name" class="form-control" value="{{ user.last_name }}" required>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" value="{{ user.email }}" required>
+              </div>
+
+              <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" id="phone" name="phone" class="form-control" value="{{ user.phone }}" required>
+              </div>
+
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary">Update Profile</button>
+              </div>
+            </form>
+          </div>
+
+          <div id="password" class="password-section" style="display: none;">
+            <h3>Change Password</h3>
+            <form id="passwordForm" action="{{ url_for('change_password') }}" method="POST">
+              <div class="form-group">
+                <label for="current_password">Current Password</label>
+                <input type="password" id="current_password" name="current_password" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label for="new_password">New Password</label>
+                <input type="password" id="new_password" name="new_password" class="form-control" required>
+                <small class="form-text">Password must be at least 8 characters long</small>
+              </div>
+
+              <div class="form-group">
+                <label for="confirm_password">Confirm New Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary">Change Password</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cancellation Confirmation Modal -->
+  <div id="cancellation-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Confirm Cancellation</h3>
+      <p>Are you sure you want to cancel this booking?</p>
+
+      <div id="cancellation-details">
+        <!-- This will be populated dynamically -->
+      </div>
+
+      <div class="modal-actions">
+        <form id="cancel-booking-form" action="" method="POST">
+          <button type="submit" class="btn btn-primary">Confirm Cancellation</button>
+          <button type="button" class="btn btn-secondary" id="cancel-modal-close">Keep My Booking</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Horizon Travels</h3>
+          <p>Making UK travel easy and comfortable since 2023.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('destinations') }}">Destinations</a></li>
+            <li><a href="{{ url_for('booking') }}">Book Now</a></li>
+            <li><a href="{{ url_for('user_dashboard') }}">My Account</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p>Email: info@horizontravels.com</p>
+          <p>Phone: +44 123 456 7890</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Horizon Travels. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('nav');
+
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      nav.classList.toggle('active');
+    });
+
+    // Tab switching in dashboard
+    document.querySelectorAll('.dashboard-sidebar a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const target = link.getAttribute('href').substring(1);
+
+        // Hide all sections
+        document.querySelectorAll('.dashboard-content > div').forEach(section => {
+          section.style.display = 'none';
+        });
+
+        // Show target section
+        document.getElementById(target).style.display = 'block';
+
+        // Update active link
+        document.querySelectorAll('.dashboard-sidebar li').forEach(item => {
+          item.classList.remove('active');
+        });
+        link.parentElement.classList.add('active');
+      });
+    });
+
+    // Password form validation
+    document.getElementById('passwordForm').addEventListener('submit', (e) => {
+      const newPassword = document.getElementById('new_password').value;
+      const confirmPassword = document.getElementById('confirm_password').value;
+
+      if (newPassword !== confirmPassword) {
+        e.preventDefault();
+        alert('New passwords do not match!');
+        return false;
+      }
+
+      if (newPassword.length < 8) {
+        e.preventDefault();
+        alert('Password must be at least 8 characters long!');
+        return false;
+      }
+
+      return true;
+    });
+
+    // Add CSS to flash messages
+    document.addEventListener('DOMContentLoaded', () => {
+      const flashMessages = document.querySelectorAll('.flash-message');
+      if (flashMessages.length > 0) {
+        setTimeout(() => {
+          flashMessages.forEach(msg => {
+            msg.style.opacity = '0';
+          });
+        }, 5000);
+      }
+    });
+
+    // Cancellation Modal
+    const cancellationModal = document.getElementById('cancellation-modal');
+    const cancelBookingForm = document.getElementById('cancel-booking-form');
+    const cancellationDetails = document.getElementById('cancellation-details');
+    const closeModalBtn = document.querySelector('#cancellation-modal .close');
+    const cancelModalCloseBtn = document.getElementById('cancel-modal-close');
+
+    // Open modal when clicking cancel button
+    document.querySelectorAll('.cancel-booking-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const bookingId = btn.getAttribute('data-booking-id');
+
+        // Set form action
+        cancelBookingForm.action = `/cancel-booking/${bookingId}`;
+
+        // Fetch booking details to calculate cancellation fee
+        try {
+          const response = await fetch(`/booking-confirmation/${bookingId}`);
+          const html = await response.text();
+
+          // Extract journey date from the HTML (this is a simple approach)
+          const journeyDateMatch = html.match(/Date:<\/strong> (\d+ \w+ \d+)/);
+          const journeyDate = journeyDateMatch ? journeyDateMatch[1] : '';
+
+          // Extract total price from the HTML
+          const totalPriceMatch = html.match(/Total Amount:<\/strong> £([\d.]+)/);
+          const totalPrice = totalPriceMatch ? parseFloat(totalPriceMatch[1]) : 0;
+
+          // Calculate days until journey
+          const today = new Date();
+          const journeyDateObj = new Date(journeyDate);
+          const daysToJourney = Math.ceil((journeyDateObj - today) / (1000 * 60 * 60 * 24));
+
+          // Calculate cancellation fee
+          let cancellationFee = 0;
+          let refundAmount = totalPrice;
+
+          if (daysToJourney <= 30) {
+            cancellationFee = totalPrice; // 100% fee
+            refundAmount = 0;
+          } else if (daysToJourney <= 60) {
+            cancellationFee = totalPrice * 0.4; // 40% fee
+            refundAmount = totalPrice * 0.6;
+          }
+
+          // Update cancellation details
+          let detailsHTML = `<p><strong>Journey Date:</strong> ${journeyDate}</p>`;
+          detailsHTML += `<p><strong>Total Price:</strong> £${totalPrice.toFixed(2)}</p>`;
+
+          if (daysToJourney > 60) {
+            detailsHTML += `<p>You will receive a <strong>full refund</strong> of £${totalPrice.toFixed(2)}.</p>`;
+          } else if (daysToJourney >= 30) {
+            detailsHTML += `<p>You will be charged a <strong>40% cancellation fee</strong> of £${cancellationFee.toFixed(2)}.</p>`;
+            detailsHTML += `<p>Your refund will be £${refundAmount.toFixed(2)}.</p>`;
+          } else {
+            detailsHTML += `<p>You will be charged a <strong>100% cancellation fee</strong>.</p>`;
+            detailsHTML += `<p>No refund will be issued for this booking.</p>`;
+          }
+
+          cancellationDetails.innerHTML = detailsHTML;
+        } catch (error) {
+          console.error('Error fetching booking details:', error);
+          cancellationDetails.innerHTML = '<p>Could not calculate cancellation fee. Please proceed with caution.</p>';
+        }
+
+        // Show modal
+        cancellationModal.style.display = 'block';
+      });
+    });
+
+    // Close modal when clicking the X
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener('click', () => {
+        cancellationModal.style.display = 'none';
+      });
+    }
+
+    // Close modal when clicking "Keep My Booking"
+    if (cancelModalCloseBtn) {
+      cancelModalCloseBtn.addEventListener('click', () => {
+        cancellationModal.style.display = 'none';
+      });
+    }
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (event) => {
+      if (event.target === cancellationModal) {
+        cancellationModal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

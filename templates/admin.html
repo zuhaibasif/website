@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <title>Horizon Travels - Admin Dashboard</title>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>Horizon Travels</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="{{ url_for('admin') }}" class="active">Dashboard</a></li>
+          <li><a href="{{ url_for('logout') }}">Logout</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <h2>Admin Dashboard</h2>
+      <p>Manage bookings, users, and journey details</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-messages">
+            {% for category, message in messages %}
+              <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </section>
+
+  <section class="admin-section">
+    <div class="container">
+      <div class="admin-tabs">
+        <button class="tab-btn active" data-tab="users">Manage Users</button>
+        <button class="tab-btn" data-tab="journeys">Manage Journeys</button>
+        <button class="tab-btn" data-tab="bookings">Manage Bookings</button>
+        <button class="tab-btn" data-tab="reports">Reports</button>
+      </div>
+
+      <!-- Users Management Tab -->
+      <div id="users-tab" class="tab-content active">
+        <h3>User Management</h3>
+        <div class="admin-actions">
+          <a href="{{ url_for('register') }}" class="btn btn-primary">Add New User</a>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Role</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if all_users %}
+                {% for user in all_users %}
+                <tr>
+                  <td>{{ user.id }}</td>
+                  <td>{{ user.first_name }} {{ user.last_name }}</td>
+                  <td>{{ user.email }}</td>
+                  <td>{{ user.phone }}</td>
+                  <td>{{ 'Admin' if user.is_admin else 'User' }}</td>
+                  <td>
+                    <form action="{{ url_for('manage_user', user_id=user.id) }}" method="POST" style="display: inline;">
+                      <input type="hidden" name="action" value="reset_password">
+                      <button type="submit" class="btn-small">Reset Password</button>
+                    </form>
+                    <form action="{{ url_for('manage_user', user_id=user.id) }}" method="POST" style="display: inline;">
+                      <input type="hidden" name="action" value="toggle_admin">
+                      <button type="submit" class="btn-small">
+                        {% if user.is_admin %}Remove Admin{% else %}Make Admin{% endif %}
+                      </button>
+                    </form>
+                    <form action="{{ url_for('manage_user', user_id=user.id) }}" method="POST" style="display: inline;">
+                      <input type="hidden" name="action" value="delete">
+                      <button type="submit" class="btn-small btn-outline" onclick="return confirm('Are you sure you want to delete this user?')">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="6">No users found.</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Journeys Management Tab -->
+      <div id="journeys-tab" class="tab-content">
+        <h3>Manage Journeys</h3>
+        <div class="journey-form">
+          <h4>Add New Journey</h4>
+          <form action="{{ url_for('add_journey') }}" method="POST" class="add-journey-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="from_city_id">From City</label>
+                <select name="from_city_id" id="from_city_id" class="form-control" required>
+                  <option value="">Select City</option>
+                  {% for city in all_cities %}
+                    <option value="{{ city.id }}">{{ city.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="to_city_id">To City</label>
+                <select name="to_city_id" id="to_city_id" class="form-control" required>
+                  <option value="">Select City</option>
+                  {% for city in all_cities %}
+                    <option value="{{ city.id }}">{{ city.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="mode">Travel Mode</label>
+                <select name="mode" id="mode" class="form-control" required>
+                  <option value="">Select Mode</option>
+                  <option value="air">Air</option>
+                  <option value="coach">Coach</option>
+                  <option value="train">Train</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="available_seats">Available Seats</label>
+                <input type="number" name="available_seats" id="available_seats" class="form-control" min="1" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="departure_time">Departure Time</label>
+                <input type="time" name="departure_time" id="departure_time" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label for="arrival_time">Arrival Time</label>
+                <input type="time" name="arrival_time" id="arrival_time" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="standard_fare">Standard Fare (£)</label>
+                <input type="number" name="standard_fare" id="standard_fare" class="form-control" min="0" step="0.01" required>
+              </div>
+
+              <div class="form-group">
+                <label for="business_fare">Business Fare (£)</label>
+                <input type="number" name="business_fare" id="business_fare" class="form-control" min="0" step="0.01" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">Add Journey</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="table-container">
+          <h4>Existing Journeys</h4>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Mode</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Standard Fare</th>
+                <th>Business Fare</th>
+                <th>Seats</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if all_routes %}
+                {% for route in all_routes %}
+                <tr>
+                  <td>{{ route.id }}</td>
+                  <td>{{ route.from_city.name }}</td>
+                  <td>{{ route.to_city.name }}</td>
+                  <td>{{ route.mode|capitalize }}</td>
+                  <td>{{ route.departure_time.strftime('%H:%M') }}</td>
+                  <td>{{ route.arrival_time.strftime('%H:%M') }}</td>
+                  <td>£{{ "%.2f"|format(route.standard_fare) }}</td>
+                  <td>£{{ "%.2f"|format(route.business_fare) }}</td>
+                  <td>{{ route.available_seats }}</td>
+                  <td>
+                    <button class="btn-small edit-journey" data-id="{{ route.id }}"
+                            data-from="{{ route.from_city_id }}"
+                            data-to="{{ route.to_city_id }}"
+                            data-mode="{{ route.mode }}"
+                            data-departure="{{ route.departure_time.strftime('%H:%M') }}"
+                            data-arrival="{{ route.arrival_time.strftime('%H:%M') }}"
+                            data-standard="{{ route.standard_fare }}"
+                            data-business="{{ route.business_fare }}"
+                            data-seats="{{ route.available_seats }}">
+                      Edit
+                    </button>
+                    <form action="{{ url_for('delete_journey', route_id=route.id) }}" method="POST" style="display: inline;">
+                      <button type="submit" class="btn-small btn-outline" onclick="return confirm('Are you sure you want to delete this journey?')">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="10">No journeys found.</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Edit Journey Modal -->
+      <div id="edit-journey-modal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h3>Edit Journey</h3>
+          <form action="{{ url_for('edit_journey', route_id=0) }}" method="POST" id="edit-journey-form">
+            <input type="hidden" name="route_id" id="edit-route-id">
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="edit_from_city_id">From City</label>
+                <select name="from_city_id" id="edit_from_city_id" class="form-control" required>
+                  {% for city in all_cities %}
+                    <option value="{{ city.id }}">{{ city.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="edit_to_city_id">To City</label>
+                <select name="to_city_id" id="edit_to_city_id" class="form-control" required>
+                  {% for city in all_cities %}
+                    <option value="{{ city.id }}">{{ city.name }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="edit_mode">Travel Mode</label>
+                <select name="mode" id="edit_mode" class="form-control" required>
+                  <option value="air">Air</option>
+                  <option value="coach">Coach</option>
+                  <option value="train">Train</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="edit_available_seats">Available Seats</label>
+                <input type="number" name="available_seats" id="edit_available_seats" class="form-control" min="1" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="edit_departure_time">Departure Time</label>
+                <input type="time" name="departure_time" id="edit_departure_time" class="form-control" required>
+              </div>
+
+              <div class="form-group">
+                <label for="edit_arrival_time">Arrival Time</label>
+                <input type="time" name="arrival_time" id="edit_arrival_time" class="form-control" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="edit_standard_fare">Standard Fare (£)</label>
+                <input type="number" name="standard_fare" id="edit_standard_fare" class="form-control" min="0" step="0.01" required>
+              </div>
+
+              <div class="form-group">
+                <label for="edit_business_fare">Business Fare (£)</label>
+                <input type="number" name="business_fare" id="edit_business_fare" class="form-control" min="0" step="0.01" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">Update Journey</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Bookings Management Tab -->
+      <!-- filepath: c:\Users\zuhai\OneDrive - UWE Bristol\_notes+coursework\year 1\web development and databases\-website-\templates\admin.html -->
+
+      <div id="bookings-tab" class="tab-content">
+        <h3>Manage Bookings</h3>
+        <div class="booking-filters">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="booking-status-filter">Filter by Status</label>
+              <select id="booking-status-filter" class="form-control">
+                <option value="all">All Bookings</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="pending">Pending</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="booking-date-filter">Filter by Date</label>
+              <select id="booking-date-filter" class="form-control">
+                <option value="all">All Dates</option>
+                <option value="today">Today</option>
+                <option value="tomorrow">Tomorrow</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table id="bookings-table">
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>User</th>
+                <th>Route</th>
+                <th>Date</th>
+                <th>Passengers</th>
+                <th>Class</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {% if all_bookings %}
+              {% for booking in all_bookings %}
+              <tr data-status="{{ booking.status }}" data-date="{{ booking.journey_date.strftime('%Y-%m-%d') }}">
+                <td>{{ booking.reference }}</td>
+                <td>{{ booking.user.first_name }} {{ booking.user.last_name }}</td>
+                <td>{{ booking.route.from_city.name }} to {{ booking.route.to_city.name }}</td>
+                <td>{{ booking.journey_date.strftime('%d/%m/%Y') }}</td>
+                <td>{{ booking.passengers }}</td>
+                <td>{{ booking.class_type|capitalize }}</td>
+                <td>£{{ "%.2f"|format(booking.total_price) }}</td>
+                <td class="status-{{ booking.status }}">{{ booking.status|capitalize }}</td>
+                <td>
+                  <a href="{{ url_for('booking_confirmation', booking_id=booking.id) }}" class="btn-small">View</a>
+                  {% if booking.status != 'cancelled' %}
+                  <form action="{{ url_for('cancel_booking', booking_id=booking.id) }}" method="POST" style="display: inline;">
+                    <button type="submit" class="btn-small btn-outline" onclick="return confirm('Are you sure you want to cancel this booking?')">Cancel</button>
+                  </form>
+                  {% endif %}
+                </td>
+              </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                  <td colspan="9">No bookings found.</td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+        </div>
+      </div>
+
+      <!-- Reports Tab -->
+      <div id="reports-tab" class="tab-content">
+        <h3>Reports</h3>
+        <div class="report-controls">
+          <form action="{{ url_for('admin_reports') }}" method="GET" id="report-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="report-type">Report Type</label>
+                <select id="report-type" name="report_type" class="form-control">
+                  <option value="monthly-sales" {% if report_type == 'monthly-sales' %}selected{% endif %}>Monthly Sales</option>
+                  <option value="journey-sales" {% if report_type == 'journey-sales' %}selected{% endif %}>Journey Sales</option>
+                  <option value="top-customers" {% if report_type == 'top-customers' %}selected{% endif %}>Top Customers</option>
+                  <option value="profit-loss" {% if report_type == 'profit-loss' %}selected{% endif %}>Profit/Loss Analysis</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="report-period">Time Period</label>
+                <select id="report-period" name="period" class="form-control">
+                  <option value="30" {% if period == '30' %}selected{% endif %}>Last 30 Days</option>
+                  <option value="90" {% if period == '90' %}selected{% endif %}>Last 90 Days</option>
+                  <option value="180" {% if period == '180' %}selected{% endif %}>Last 6 Months</option>
+                  <option value="365" {% if period == '365' %}selected{% endif %}>Last Year</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <button type="submit" class="btn btn-primary">Generate Report</button>
+              <button type="button" class="btn btn-secondary" id="export-report">Export to CSV</button>
+            </div>
+          </form>
+        </div>
+
+        <div id="report-results" class="report-results">
+          {% if report_data %}
+            <div class="report-header">
+              <h4>{{ report_data.title }}</h4>
+            </div>
+
+            <div class="report-content">
+              {% if report_type == 'monthly-sales' or report_type == 'journey-sales' %}
+                <div class="chart-container">
+                  <canvas id="reportChart"></canvas>
+                </div>
+                <div class="report-summary">
+                  <p>Total Revenue: £{{ "%.2f"|format(sum(report_data.values)) }}</p>
+                  <p>Average Revenue: £{{ "%.2f"|format(sum(report_data.values) / report_data.values|length if report_data.values|length > 0 else 0) }}</p>
+                </div>
+              {% elif report_type == 'top-customers' %}
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Customer</th>
+                      <th>Bookings</th>
+                      <th>Total Spent</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for customer in report_data.customers %}
+                      <tr>
+                        <td>{{ customer.name }}</td>
+                        <td>{{ customer.bookings }}</td>
+                        <td>£{{ "%.2f"|format(customer.spent) }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              {% elif report_type == 'profit-loss' %}
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Route</th>
+                      <th>Bookings</th>
+                      <th>Revenue</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for route in report_data.routes %}
+                      <tr>
+                        <td>{{ route.from_city }}</td>
+                        <td>{{ route.bookings }}</td>
+                        <td>£{{ "%.2f"|format(route.revenue) }}</td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              {% endif %}
+            </div>
+          {% else %}
+            <div class="no-report-data">
+              <p>Select a report type and period, then click "Generate Report" to view data.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Export Report Form (Hidden) -->
+      <form id="export-form" action="{{ url_for('export_report') }}" method="POST" style="display: none;">
+        <input type="hidden" name="report_type" id="export-report-type">
+        <input type="hidden" name="period" id="export-period">
+      </form>
+    </div>
+  </section>
+
+  <!-- Modals -->
+  <div id="user-modal" class="modal">
+    <!-- User form will be loaded here -->
+  </div>
+
+  <div id="journey-modal" class="modal">
+    <!-- Journey form will be loaded here -->
+  </div>
+
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.tab-btn, .tab-content').forEach(el => {
+                el.classList.remove('active');
+            });
+            btn.classList.add('active');
+            document.getElementById(`${btn.dataset.tab}-tab`).classList.add('active');
+        });
+    });
+
+    // Basic form handling (would need backend implementation)
+    document.getElementById('generate-report').addEventListener('click', () => {
+        const reportType = document.getElementById('report-type').value;
+        const period = document.getElementById('report-period').value;
+
+        // Simple results display - in a real app, you'd fetch from server
+        const results = {
+            'monthly-sales': '<p>Monthly sales report would show here</p>',
+            'journey-sales': '<p>Journey sales report would show here</p>',
+            'top-customers': '<p>Top customers report would show here</p>',
+            'profit-loss': '<p>Profit/loss analysis would show here</p>'
+        };
+
+        document.getElementById('report-results').innerHTML = results[reportType];
+    });
+
+    // For other buttons - just show alerts for now
+    document.querySelectorAll('.edit-user, .delete-user, .edit-route, .delete-route').forEach(btn => {
+        btn.addEventListener('click', () => {
+            alert('This would trigger the appropriate action in a full implementation');
+        });
+    });
+
+
+    </script>
+</body>
+</html>

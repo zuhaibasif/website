@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <title>Horizon Travels - Destinations</title>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>Horizon Travels</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          <li><a href="{{ url_for('destinations') }}" class="active">Destinations</a></li>
+          <li><a href="{{ url_for('booking') }}">Book Now</a></li>
+          <li><a href="{{ url_for('login') }}">Login</a></li>
+          <li><a href="{{ url_for('register') }}">Register</a></li>
+        </ul>
+      </nav>
+      <div class="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <h2>Our Destinations</h2>';/'
+      <p>Explore our routes and find your perfect journey</p>
+    </div>
+  </section>
+
+  <section class="destinations">
+    <div class="container">
+      <div class="destination-filters">
+        <h3>Filter by Travel Mode</h3>
+        <div class="filter-buttons">
+          <button class="filter-btn active" data-mode="air">Air</button>
+          <button class="filter-btn" data-mode="coach">Coach</button>
+          <button class="filter-btn" data-mode="train">Train</button>
+          <button class="filter-btn" data-mode="fares">Fares</button>
+          <button class="filter-btn" data-mode="policy">Policies</button>
+        </div>
+      </div>
+
+      <!-- Air Timetable -->
+      <div class="timetable" id="air-timetable">
+        <h3>Air Timetable (Mon-Fri only)</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Departure City</th>
+                <th>Departure Time</th>
+                <th>Arrival City</th>
+                <th>Arrival Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-mode="air">
+                <td>Newcastle</td>
+                <td>17:45</td>
+                <td>Bristol</td>
+                <td>19:00</td>
+              </tr>
+              <tr data-mode="air">
+                <td>Bristol</td>
+                <td>08:40</td>
+                <td>Glasgow</td>
+                <td>09:45</td>
+              </tr>
+              <tr data-mode="air">
+                <td>Glasgow</td>
+                <td>14:30</td>
+                <td>Newcastle</td>
+                <td>15:45</td>
+              </tr>
+              <tr data-mode="air">
+                <td>Newcastle</td>
+                <td>16:15</td>
+                <td>Manchester</td>
+                <td>17:05</td>
+              </tr>
+              <tr data-mode="air">
+                <td>Manchester</td>
+                <td>18:25</td>
+                <td>Bristol</td>
+                <td>19:30</td>
+              </tr>
+              <tr data-mode="air">
+                <td>Bristol</td>
+                <td>06:20</td>
+                <td>Manchester</td>
+                <td>07:20</td>
+              </tr>
+              <tr data-mode="air">
+                <td>Portsmouth</td>
+                <td>12:00</td>
+                <td>Dundee</td>
+                <td>14:00</td>
+              </tr>
+              <tr data-mode="air">
+                <td>Dundee</td>
+                <td>10:00</td>
+                <td>Portsmouth</td>
+                <td>12:00</td>
+              </tr>
+              <tr data-mode="air">
+                <td>Edinburgh</td>
+                <td>18:30</td>
+                <td>Cardiff</td>
+                <td>20:00</td>
+              </tr>
+              <tr data-mode="air">
+                <td>Southampton</td>
+                <td>12:00</td>
+                <td>Manchester</td>
+                <td>13:30</td>
+              </tr>
+              <tr data-mode="air">
+                <td>Manchester</td>
+                <td>19:00</td>
+                <td>Southampton</td>
+                <td>20:30</td>
+              </tr>
+              <tr data-mode="air">
+                <td>Birmingham</td>
+                <td>17:00</td>
+                <td>Newcastle</td>
+                <td>17:45</td>
+              </tr>
+              <tr data-mode="air">
+                <td>Newcastle</td>
+                <td>07:00</td>
+                <td>Birmingham</td>
+                <td>07:45</td>
+              </tr>
+              <tr data-mode="air">
+                <td>Aberdeen</td>
+                <td>08:00</td>
+                <td>Portsmouth</td>
+                <td>09:30</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Air Fares -->
+      <div class="timetable" id="air-fares">
+        <h3>Air Fares (Standard Seat)</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Route</th>
+                <th>Fare (£)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-mode="fares">
+                <td>Dundee ⇄ Portsmouth</td>
+                <td>120</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Bristol ⇄ Manchester</td>
+                <td>80</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Bristol ⇄ Newcastle</td>
+                <td>90</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Bristol ⇄ Glasgow</td>
+                <td>110</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Bristol ⇄ London</td>
+                <td>80</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Manchester ⇄ Southampton</td>
+                <td>90</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Cardiff ⇄ Edinburgh</td>
+                <td>90</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>All other routes</td>
+                <td>100</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Coach Timetable -->
+      <div class="timetable" id="coach-timetable">
+        <h3>Coach Timetable (Sat-Thurs only)</h3>
+        <p>Routes exclude Dundee/Aberdeen. Journey time = 8× Air time.</p>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Departure City</th>
+                <th>Departure Time</th>
+                <th>Arrival City</th>
+                <th>Arrival Time</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-mode="coach">
+                <td>Newcastle</td>
+                <td>17:45</td>
+                <td>Bristol</td>
+                <td>03:45</td>
+                <td>Next-day arrival</td>
+              </tr>
+              <tr data-mode="coach">
+                <td>Bristol</td>
+                <td>08:40</td>
+                <td>Glasgow</td>
+                <td>17:20</td>
+                <td></td>
+              </tr>
+              <tr data-mode="coach">
+                <td>Glasgow</td>
+                <td>14:30</td>
+                <td>Newcastle</td>
+                <td>06:30</td>
+                <td>Next-day arrival</td>
+              </tr>
+              <tr data-mode="coach">
+                <td>Newcastle</td>
+                <td>16:15</td>
+                <td>Manchester</td>
+                <td>00:35</td>
+                <td>Next-day arrival</td>
+              </tr>
+              <tr data-mode="coach">
+                <td>Manchester</td>
+                <td>18:25</td>
+                <td>Bristol</td>
+                <td>06:05</td>
+                <td>Next-day arrival</td>
+              </tr>
+              <tr data-mode="coach">
+                <td>Bristol</td>
+                <td>06:20</td>
+                <td>Manchester</td>
+                <td>14:20</td>
+                <td></td>
+              </tr>
+              <tr data-mode="coach">
+                <td>Edinburgh</td>
+                <td>18:30</td>
+                <td>Cardiff</td>
+                <td>10:00</td>
+                <td>Next-day arrival</td>
+              </tr>
+              <tr data-mode="coach">
+                <td>Southampton</td>
+                <td>12:00</td>
+                <td>Manchester</td>
+                <td>04:00</td>
+                <td>Next-day arrival</td>
+              </tr>
+              <tr data-mode="coach">
+                <td>Manchester</td>
+                <td>19:00</td>
+                <td>Southampton</td>
+                <td>11:00</td>
+                <td>Next-day arrival</td>
+              </tr>
+              <tr data-mode="coach">
+                <td>Birmingham</td>
+                <td>17:00</td>
+                <td>Newcastle</td>
+                <td>01:00</td>
+                <td>Next-day arrival</td>
+              </tr>
+              <tr data-mode="coach">
+                <td>Newcastle</td>
+                <td>07:00</td>
+                <td>Birmingham</td>
+                <td>15:00</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Coach Fares -->
+      <div class="timetable" id="coach-fares">
+        <h3>Coach Fares (1/4th of Air Fare)</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Route</th>
+                <th>Fare (£)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-mode="fares">
+                <td>Bristol ⇄ Manchester</td>
+                <td>20</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Bristol ⇄ Newcastle</td>
+                <td>23</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Bristol ⇄ Glasgow</td>
+                <td>28</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Bristol ⇄ London</td>
+                <td>20</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Manchester ⇄ Southampton</td>
+                <td>23</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Cardiff ⇄ Edinburgh</td>
+                <td>23</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>All other routes</td>
+                <td>25</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Train Timetable -->
+      <div class="timetable" id="train-timetable">
+        <h3>Train Timetable (All week)</h3>
+        <p>Routes exclude Dundee/Aberdeen. Journey time = 5× Air time.</p>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Departure City</th>
+                <th>Departure Time</th>
+                <th>Arrival City</th>
+                <th>Arrival Time</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-mode="train">
+                <td>Newcastle</td>
+                <td>17:45</td>
+                <td>Bristol</td>
+                <td>23:00</td>
+                <td></td>
+              </tr>
+              <tr data-mode="train">
+                <td>Bristol</td>
+                <td>08:40</td>
+                <td>Glasgow</td>
+                <td>14:05</td>
+                <td></td>
+              </tr>
+              <tr data-mode="train">
+                <td>Glasgow</td>
+                <td>14:30</td>
+                <td>Newcastle</td>
+                <td>19:45</td>
+                <td></td>
+              </tr>
+              <tr data-mode="train">
+                <td>Newcastle</td>
+                <td>16:15</td>
+                <td>Manchester</td>
+                <td>21:20</td>
+                <td></td>
+              </tr>
+              <tr data-mode="train">
+                <td>Manchester</td>
+                <td>18:25</td>
+                <td>Bristol</td>
+                <td>23:55</td>
+                <td></td>
+              </tr>
+              <tr data-mode="train">
+                <td>Bristol</td>
+                <td>06:20</td>
+                <td>Manchester</td>
+                <td>11:40</td>
+                <td></td>
+              </tr>
+              <tr data-mode="train">
+                <td>Edinburgh</td>
+                <td>18:30</td>
+                <td>Cardiff</td>
+                <td>23:30</td>
+                <td></td>
+              </tr>
+              <tr data-mode="train">
+                <td>Southampton</td>
+                <td>12:00</td>
+                <td>Manchester</td>
+                <td>17:30</td>
+                <td></td>
+              </tr>
+              <tr data-mode="train">
+                <td>Manchester</td>
+                <td>19:00</td>
+                <td>Southampton</td>
+                <td>00:30</td>
+                <td>Next-day arrival</td>
+              </tr>
+              <tr data-mode="train">
+                <td>Birmingham</td>
+                <td>17:00</td>
+                <td>Newcastle</td>
+                <td>21:45</td>
+                <td></td>
+              </tr>
+              <tr data-mode="train">
+                <td>Newcastle</td>
+                <td>07:00</td>
+                <td>Birmingham</td>
+                <td>11:45</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Train Fares -->
+      <div class="timetable" id="train-fares">
+        <h3>Train Fares (2.5× Air Fare)</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Route</th>
+                <th>Fare (£)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-mode="fares">
+                <td>Bristol ⇄ Manchester</td>
+                <td>200</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Bristol ⇄ Newcastle</td>
+                <td>225</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Bristol ⇄ Glasgow</td>
+                <td>275</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Bristol ⇄ London</td>
+                <td>200</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Manchester ⇄ Southampton</td>
+                <td>225</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>Cardiff ⇄ Edinburgh</td>
+                <td>225</td>
+              </tr>
+              <tr data-mode="fares">
+                <td>All other routes</td>
+                <td>250</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Policies -->
+      <div class="timetable" id="policy-info" style="display: none;">
+        <h3>Booking Policies</h3>
+
+        <!-- Cancellation Policy -->
+        <h4>Cancellation Policy</h4>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Period Before Departure</th>
+                <th>Cancellation Charge</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-mode="policy">
+                <td>> 60 days</td>
+                <td>0%</td>
+              </tr>
+              <tr data-mode="policy">
+                <td>30–60 days</td>
+                <td>40%</td>
+              </tr>
+              <tr data-mode="policy">
+                <td>< 30 days</td>
+                <td>100%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Advance Booking Discounts -->
+        <h4>Advance Booking Discounts</h4>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Days in Advance</th>
+                <th>Discount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr data-mode="policy">
+                <td>80–90</td>
+                <td>25%</td>
+              </tr>
+              <tr data-mode="policy">
+                <td>60–79</td>
+                <td>15%</td>
+              </tr>
+              <tr data-mode="policy">
+                <td>45–59</td>
+                <td>10%</td>
+              </tr>
+              <tr data-mode="policy">
+                <td><45</td>
+                <td>0%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Seat Allocation & Pricing -->
+        <h4>Seat Allocation & Pricing</h4>
+        <p>Business Class: 20% of total seats, fare = 2× Standard.</p>
+        <p>Economy Class: 80% of total seats, fare = Standard.</p>
+        <p>Max Seats per Vehicle:</p>
+        <ul>
+          <li>Air: 130</li>
+          <li>Coach: 45</li>
+          <li>Train: 250</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        // Remove active class from all buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        this.classList.add('active');
+        
+        // Get the mode from data attribute
+        const mode = this.dataset.mode;
+        
+        // Show/hide appropriate sections
+        document.querySelectorAll('.timetable').forEach(table => {
+          if (table.id.includes(mode)) {
+            table.style.display = 'block';
+          } else {
+            table.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Initialize with air timetable visible
+    document.querySelector('.filter-btn[data-mode="air"]').click();
+  </script>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Horizon Travels</h3>
+          <p>Making UK travel easy and comfortable since 2023.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('destinations') }}">Destinations</a></li>
+            <li><a href="{{ url_for('booking') }}">Book Now</a></li>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p>Email: info@horizontravels.com</p>
+          <p>Phone: +44 123 456 7890</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Horizon Travels. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('nav');
+
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      nav.classList.toggle('active');
+    });
+
+    // Filter functionality
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const timetableDivs = document.querySelectorAll('.timetable');
+
+    // Show only Air timetable initially
+    timetableDivs.forEach(div => {
+      if (div.id !== 'air-timetable') {
+        div.style.display = 'none';
+      }
+    });
+
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all buttons
+        filterButtons.forEach(btn => btn.classList.remove('active'));
+        // Add active class to clicked button
+        button.classList.add('active');
+
+        const mode = button.getAttribute('data-mode');
+
+        // Hide all timetables
+        timetableDivs.forEach(div => {
+          div.style.display = 'none';
+        });
+
+        // Show appropriate timetable based on mode
+        if (mode === 'air') {
+          document.getElementById('air-timetable').style.display = '';
+        } else if (mode === 'coach') {
+          document.getElementById('coach-timetable').style.display = '';
+        } else if (mode === 'train') {
+          document.getElementById('train-timetable').style.display = '';
+        } else if (mode === 'fares') {
+          document.getElementById('air-fares').style.display = '';
+          document.getElementById('coach-fares').style.display = '';
+          document.getElementById('train-fares').style.display = '';
+        } else if (mode === 'policy') {
+          document.getElementById('policy-info').style.display = '';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

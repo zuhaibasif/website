@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <title>Horizon Travels - Booking Confirmation</title>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="logo">
+        <h1>Horizon Travels</h1>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="{{ url_for('index') }}">Home</a></li>
+          <li><a href="{{ url_for('destinations') }}">Destinations</a></li>
+          <li><a href="{{ url_for('booking') }}">Book Now</a></li>
+          <li><a href="{{ url_for('login') }}">Login</a></li>
+          <li><a href="{{ url_for('register') }}">Register</a></li>
+        </ul>
+      </nav>
+      <div class="menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <section class="page-header">
+    <div class="container">
+      <h2>Booking Confirmation</h2>
+      <p>Your journey is confirmed!</p>
+    </div>
+  </section>
+
+  <section class="confirmation-section">
+    <div class="container">
+      <div class="confirmation-container">
+        <div class="confirmation-header">
+          <div class="success-icon">✓</div>
+          <h3>Booking Successful</h3>
+          <p>Thank you for booking with Horizon Travels. Your booking has been confirmed.</p>
+          <p>Booking ID: <strong>{{ booking.reference }}</strong></p>
+        </div>
+
+        <div class="booking-details-card">
+          <div class="booking-details-header">
+            <h4>Journey Details</h4>
+          </div>
+          <div class="booking-details-body">
+            <div class="details-row">
+              <div class="details-label">Travel Mode:</div>
+              <div class="details-value">{{ booking.route.mode|capitalize }} Travel</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">From:</div>
+              <div class="details-value">{{ booking.route.from_city.name }}</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">To:</div>
+              <div class="details-value">{{ booking.route.to_city.name }}</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">Date:</div>
+              <div class="details-value">{{ booking.journey_date.strftime('%d %B %Y') }}</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">Departure Time:</div>
+              <div class="details-value">{{ booking.route.departure_time.strftime('%H:%M') }}</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">Arrival Time:</div>
+              <div class="details-value">{{ booking.route.arrival_time.strftime('%H:%M') }}</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">Seat Class:</div>
+              <div class="details-value">{{ booking.class_type|capitalize }}</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">Passengers:</div>
+              <div class="details-value">{{ booking.passengers }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="booking-details-card">
+          <div class="booking-details-header">
+            <h4>Payment Details</h4>
+          </div>
+          <div class="booking-details-body">
+            <div class="details-row">
+              <div class="details-label">Base Price:</div>
+              <div class="details-value">£{{ "%.2f"|format(booking.base_price) }}</div>
+            </div>
+            {% if booking.discount > 0 %}
+            <div class="details-row">
+              <div class="details-label">Early Booking Discount:</div>
+              <div class="details-value">-£{{ "%.2f"|format(booking.discount) }}</div>
+            </div>
+            {% endif %}
+            {% if booking.class_upgrade > 0 %}
+            <div class="details-row">
+              <div class="details-label">Class Upgrade:</div>
+              <div class="details-value">£{{ "%.2f"|format(booking.class_upgrade) }}</div>
+            </div>
+            {% endif %}
+            <div class="details-row total-row">
+              <div class="details-label">Total Amount:</div>
+              <div class="details-value">£{{ "%.2f"|format(booking.total_price) }}</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">Payment Method:</div>
+              <div class="details-value">Credit Card</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">Payment Status:</div>
+              <div class="details-value">{{ booking.status|capitalize }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="booking-details-card">
+          <div class="booking-details-header">
+            <h4>Contact Information</h4>
+          </div>
+          <div class="booking-details-body">
+            <div class="details-row">
+              <div class="details-label">Name:</div>
+              <div class="details-value">{{ booking.user.first_name }} {{ booking.user.last_name }}</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">Email:</div>
+              <div class="details-value">{{ booking.user.email }}</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">Phone:</div>
+              <div class="details-value">{{ booking.user.phone }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="booking-details-card">
+          <div class="booking-details-header">
+            <h4>Cancellation Policy</h4>
+          </div>
+          <div class="booking-details-body">
+            <div class="details-row">
+              <div class="details-label">More than 60 days before departure:</div>
+              <div class="details-value">0% cancellation fee</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">30-60 days before departure:</div>
+              <div class="details-value">40% cancellation fee</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">Less than 30 days before departure:</div>
+              <div class="details-value">100% cancellation fee (no refund)</div>
+            </div>
+            {% if booking.status != 'cancelled' %}
+            <div class="details-row">
+              <div class="details-label">Your cancellation fee:</div>
+              {% set days_to_journey = (booking.journey_date - now.date()).days %}
+              {% if days_to_journey > 60 %}
+                <div class="details-value">£0.00 (Full refund)</div>
+              {% elif days_to_journey >= 30 %}
+                <div class="details-value">£{{ "%.2f"|format(booking.total_price * 0.4) }} (40% of total price)</div>
+              {% else %}
+                <div class="details-value">£{{ "%.2f"|format(booking.total_price) }} (No refund available)</div>
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="confirmation-actions">
+          <a href="#" class="btn btn-primary">Download E-Ticket</a>
+          <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">View All Bookings</a>
+          {% if booking.status != 'cancelled' %}
+          <button id="cancel-booking-btn" class="btn btn-outline" data-booking-id="{{ booking.id }}">Cancel Booking</button>
+          {% endif %}
+        </div>
+
+        <div class="confirmation-info">
+          <p>An email with your booking details has been sent to your registered email address.</p>
+          <p>For any queries related to your booking, please contact our customer support at info@horizontravels.com or call +44 123 456 7890.</p>
+        </div>
+
+        <!-- Cancellation Confirmation Modal -->
+        <div id="cancellation-modal" class="modal">
+          <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Confirm Cancellation</h3>
+            <p>Are you sure you want to cancel this booking?</p>
+
+            {% set days_to_journey = (booking.journey_date - now.date()).days %}
+            {% if days_to_journey > 60 %}
+              <p>You will receive a <strong>full refund</strong> of £{{ "%.2f"|format(booking.total_price) }}.</p>
+            {% elif days_to_journey >= 30 %}
+              <p>You will be charged a <strong>40% cancellation fee</strong> of £{{ "%.2f"|format(booking.total_price * 0.4) }}.</p>
+              <p>Your refund will be £{{ "%.2f"|format(booking.total_price * 0.6) }}.</p>
+            {% else %}
+              <p>You will be charged a <strong>100% cancellation fee</strong>.</p>
+              <p>No refund will be issued for this booking.</p>
+            {% endif %}
+
+            <div class="modal-actions">
+              <form action="{{ url_for('cancel_booking', booking_id=booking.id) }}" method="POST">
+                <button type="submit" class="btn btn-primary">Confirm Cancellation</button>
+                <button type="button" class="btn btn-secondary" id="cancel-modal-close">Keep My Booking</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>Horizon Travels</h3>
+          <p>Making UK travel easy and comfortable since 2023.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="{{ url_for('index') }}">Home</a></li>
+            <li><a href="{{ url_for('destinations') }}">Destinations</a></li>
+            <li><a href="{{ url_for('booking') }}">Book Now</a></li>
+            <li><a href="{{ url_for('login') }}">Login</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact Us</h3>
+          <p>Email: info@horizontravels.com</p>
+          <p>Phone: +44 123 456 7890</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 Horizon Travels. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const menuToggle = document.querySelector('.menu-toggle');
+    const nav = document.querySelector('nav');
+
+    menuToggle.addEventListener('click', () => {
+      menuToggle.classList.toggle('active');
+      nav.classList.toggle('active');
+    });
+
+    // Cancellation Modal
+    const cancelBookingBtn = document.getElementById('cancel-booking-btn');
+    const cancellationModal = document.getElementById('cancellation-modal');
+    const closeModalBtn = document.querySelector('#cancellation-modal .close');
+    const cancelModalCloseBtn = document.getElementById('cancel-modal-close');
+
+    if (cancelBookingBtn) {
+      cancelBookingBtn.addEventListener('click', () => {
+        cancellationModal.style.display = 'block';
+      });
+    }
+
+    if (closeModalBtn) {
+      closeModalBtn.addEventListener('click', () => {
+        cancellationModal.style.display = 'none';
+      });
+    }
+
+    if (cancelModalCloseBtn) {
+      cancelModalCloseBtn.addEventListener('click', () => {
+        cancellationModal.style.display = 'none';
+      });
+    }
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (event) => {
+      if (event.target === cancellationModal) {
+        cancellationModal.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
