@@ -39,6 +39,93 @@ Features
 - Admin dashboard for managing bookings
 - Generate reports and analytics
 
+Architecture Decisions
+--------------------
+1. Framework Choice:
+   - Flask was chosen for its lightweight nature and flexibility
+   - Simple routing system and minimal boilerplate code
+   - Easy integration with SQLAlchemy for database operations
+
+2. Database:
+   - MySQL for robust relational data storage
+   - SQLAlchemy ORM for database abstraction and security
+   - Normalized schema design to prevent data redundancy
+
+3. Security Implementation:
+   - Session-based authentication with 7-day expiration
+   - Password hashing using Werkzeug's security functions
+   - Custom decorators for route protection (login_required, admin_required)
+   - CSRF protection through Flask's built-in features
+
+4. Frontend Architecture:
+   - Server-side rendering using Jinja2 templates
+   - Separate CSS files for different themes (styles.css, styles-jalebi.css)
+   - Minimal JavaScript usage for enhanced user experience
+
+Trade-offs Made
+-------------
+1. Server-Side Rendering vs Single Page Application:
+   - Chose server-side rendering for:
+     * Faster initial page load
+     * Better SEO capabilities
+     * Simpler development process
+   - Trade-off: Less dynamic user experience compared to SPAs
+
+2. Session-Based vs JWT Authentication:
+   - Implemented session-based auth for:
+     * Simpler implementation
+     * Better security for web-only applications
+   - Trade-off: More server resources used for session storage
+
+3. MySQL vs NoSQL:
+   - Selected MySQL for:
+     * Strong data consistency
+     * Complex querying capabilities
+     * Structured booking and user data
+   - Trade-off: Less flexibility in schema changes
+
+Testing Strategy
+--------------
+1. Manual Testing:
+   - User flow testing through all booking processes
+   - Cross-browser compatibility testing
+   - Mobile responsiveness verification
+
+2. Security Testing:
+   - Session management verification
+   - Input validation testing
+   - Authentication bypass attempts
+   - SQL injection prevention checks
+
+3. Database Testing:
+   - Data integrity checks
+   - Transaction rollback verification
+   - Concurrent booking handling
+
+4. Error Handling:
+   - Form validation testing
+   - Edge case scenarios
+   - Error message verification
+
+Deployment Considerations
+----------------------
+1. Development Environment:
+   - Local development using Flask's built-in server
+   - Virtual environment for dependency isolation
+   - Environment variables for sensitive configurations
+
+2. Production Deployment:
+   - Recommended to use:
+     * Gunicorn/uWSGI as WSGI server
+     * Nginx as reverse proxy
+     * SSL/TLS certification for HTTPS
+     * Environment-specific configuration files
+
+3. Database Management:
+   - Regular backups recommended
+   - Consider connection pooling for production
+   - Implement database migrations for updates
+
 File Structure
 -------------
 - app.py: Main application file
